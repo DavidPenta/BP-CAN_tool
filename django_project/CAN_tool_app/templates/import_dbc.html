@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block headline %}
+    Importovať .DBC súbor
+{% endblock headline %}
+
+{% block content %}
+    <div class="container pt-5 bg-white shadow-sm rounded pb-5 ps-5 pe-5">
+        <form id="form" class="container" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2" for="text1">Názov</label>
+                    <div class="col-sm-10">{{ form.name }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2" for="text4">Súbor</label>
+                    <div class="col-sm-10">{{ form.file }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2" for="text3">Poznámka</label>
+                    <div class="col-sm-10">{{ form.note }}</div>
+                </div>
+            </fieldset>
+        </form>
+        <p class="mt-4 d-flex flex-column">{{ form.errors }}</p>
+    </div>
+    <div class="container pt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-primary ms-auto me-auto d-block mb-5 btn-xl" id="back"
+                            onclick="location.href='{% url 'can-buses' car_id=car.id %}'">
+                        <i class="left-arrow "></i> Späť
+                    </button>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <button form="form" type="submit" class="btn btn-primary ms-auto me-auto d-block mb-5 btn-xl"
+                            id="save">Uložiť
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

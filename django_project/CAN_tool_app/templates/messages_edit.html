@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block headline %}
+    Upraviť správu {{ car.name }} >> {{ can_bus.name }} >> {{ message.name }}
+{% endblock headline %}
+
+{% block content %}
+    <div class="container pt-5 bg-white shadow-sm rounded pb-5 ps-5 pe-5">
+        <form id="form" class="container" method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2" for="text1">ID</label>
+                    <div class="col-sm-10">{{ form.identifier }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2" for="text1">Názov</label>
+                    <div class="col-sm-10">{{ form.name }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2" for="text1">Tx</label>
+                    <div class="col-sm-10">{{ form.transmitter }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2" for="text1">Rx</label>
+                    <div class="col-sm-10">{{ form.receivers }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2" for="text3">Poznámka</label>
+                    <div class="col-sm-10">{{ form.note }}</div>
+                </div>
+            </fieldset>
+        </form>
+        <p class="mt-4 d-flex flex-column">{{ form.errors }}</p>
+        <form id="delete" action="{% url 'messages_delete' car_id=car.id can_bus_id=can_bus.id message_id=message.id %}"
+              method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary ms-auto me-auto d-block mt-5 btn-delete" id="delete">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash"
+                     viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                    <path fill-rule="evenodd"
+                          d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                </svg>
+                Vymazať
+            </button>
+        </form>
+    </div>
+    <div class="container pt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-primary ms-auto me-auto d-block mb-5 btn-xl" id="back"
+                            onclick="location.href='{% url 'signals' car_id=car.id can_bus_id=can_bus.id message_id=message.id %}'">
+                        <i class="left-arrow "></i> Späť
+                    </button>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <button form="form" type="submit" class="btn btn-primary ms-auto me-auto d-block mb-5 btn-xl"
+                            id="save">Uložiť
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

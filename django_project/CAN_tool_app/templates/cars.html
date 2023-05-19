@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block headline %} SGT CAN tool {% endblock headline %}
+{% block head %}
+    <script>
+        function codeAddress() {
+            {% for key,value in user_preferences.items %}
+                {% if value == 1 %}
+                    hide_show_table('{{key}}' , '{% url 'cars' %}', '{{ csrf_token }}')
+                {% else %}
+                    document.getElementById('{{key}}').checked = true;
+                {% endif %}
+            {% endfor %}
+        $('#content').show();
+        }
+        window.onload = codeAddress;
+    </script>
+{% endblock head %}
+
+{% block edit %}
+<div class="col-md-4 pt-5" style="text-align:center;">
+{% if user.is_superuser %}
+        <div class="button-box col-lg-12 mt-4 mb-5 " style="text-align:center;">
+                <a id="admin" href="/admin/" class="btn btn-primary btn-xl me-3 mb-0 mb-md-2 mb-lg-0" role="button">Admin</a>
+                <a id="log_out" href="{% url 'logout' %}" class="btn btn-primary btn-xl " role="button">Odhlásiť sa</a>
+       </div>
+{% else %}
+    <button type="button" class="btn btn-primary ms-auto me-auto d-block mt-4 mb-5 btn-xl" id="edit" onclick="location.href='{% url 'logout' %}'">Odhlásiť sa</button>
+{% endif %}
+</div>
+{% endblock %}
+
+{% block content %}
+    <div id="content" style="display:none;">
+<div class="container align-middle pt-5 bg-white shadow-sm rounded pb-5 ps-5 pe-5">
+    <div class="text-xl-center text-lg-center text-center text-sm-center text-md-center">
+        <h3 class="align-content-center">Monoposty:</h3>
+    </div>
+    <div class="dropdown checkbox_div list-unstyled mb-4 d-flex justify-content-end">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Stĺpce
+        </button>
+        <ul class="dropdown-menu">
+            <li><input class="form-check-input small-checkbox green-checkbox mt-05" type="checkbox" value="hide" id="car_name" onchange="hide_show_table(this.id , '{% url 'cars' %}', '{{ csrf_token }}');" /><label for="car_name" class="ms-2 align-top">Názov</label></li>
+            <li><input class="form-check-input small-checkbox green-checkbox mt-05" type="checkbox" value="hide" id="car_year" onchange="hide_show_table(this.id, '{% url 'cars' %}', '{{ csrf_token }}');" /><label for="car_year" class="ms-2 align-top">Rok</label></li>
+            <li><input class="form-check-input small-checkbox green-checkbox mt-05" type="checkbox" value="hide" id="car_note" onchange="hide_show_table(this.id, '{% url 'cars' %}', '{{ csrf_token }}');" /><label for="car_note" class="ms-2 align-top">Poznámka</label></li>
+            <li><input class="form-check-input small-checkbox green-checkbox mt-05" type="checkbox" value="hide" id="car_author" onchange="hide_show_table(this.id, '{% url 'cars' %}', '{{ csrf_token }}');" /><label for="car_author" class="ms-2 align-top">Autor</label></li>
+            <li><input class="form-check-input small-checkbox green-checkbox mt-05" type="checkbox" value="hide" id="car_changed_at" onchange="hide_show_table(this.id, '{% url 'cars' %}', '{{ csrf_token }}');" /><label for="car_changed_at" class="ms-2 align-top">Posledná zmena</label></li>
+            <li><input class="form-check-input small-checkbox green-checkbox mt-05" type="checkbox" value="hide" id="car_created_at" onchange="hide_show_table(this.id, '{% url 'cars' %}', '{{ csrf_token }}');" /><label for="car_created_at" class="ms-2 align-top">Dátum vytvorenia</label></li>
+        </ul>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-fit table-white table-striped">
+            <thead>
+                <tr>
+                    <th scope="col"><div class="th-2"></div></th>
+                    <th scope="col" id="car_name_head">Názov</th>
+                    <th scope="col" id="car_year_head">Rok</th>
+                    <th scope="col" id="car_note_head">Poznámka</th>
+                    <th scope="col" id="car_author_head">Autor</th>
+                    <th scope="col" id="car_changed_at_head">Posledná zmena</th>
+                    <th scope="col" id="car_created_at_head">Dátum vytvorenia</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i, car in table_cars %}
+                <tr>
+                    <th scope="row">{{i}}</th>
+                    <td class="car_name"><div class="maxsize">{{car.name}}</div></td>
+                    <td class="car_year"><div class="maxsize">{{car.year}}</div></td>
+                    <td class="car_note"><div class="maxsize">{{car.note}}</div></td>
+                    <td class="car_author"><div class="maxsize">{{car.author}}</div></td>
+                    <td class="car_changed_at"><div class="maxsize">{{car.changed_at.date.isoformat}}</div></td>
+                    <td class="car_created_at"><div class="maxsize">{{car.created_at.date.isoformat}}</div></td>
+                    <td>
+                        <div class="d-flex flex-row">
+                            <a href="{% url 'can-buses' car_id=car.id %}">
+                                <button type="button" class="btn btn-primary" id="button5">Vybrať</button>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <button type="button" class="btn btn-primary ms-auto me-auto d-block mt-3" id="add" onclick="location.href='{% url 'cars_create' %}'">Pridať</button>
+</div>
+    </div>
+{% endblock content %}

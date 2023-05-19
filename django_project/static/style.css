@@ -1,0 +1,120 @@
+.btn-primary {
+    color: #FFFFFF;
+    background-color: #4bb748;
+    border-color: #4bb748;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
+    color: #FFFFFF;
+    background-color: #348032 !important;
+    border-color: #348032 !important;
+}
+
+.btn-delete {
+    color: #FFFFFF;
+    background-color: #ed0000;
+    border-color: #ed0000;
+}
+.btn-delete:hover, .btn-delete:focus, .btn-delete:active, .btn-delete.active, .open>.dropdown-toggle.btn-delete {
+    color: #FFFFFF;
+    background-color: #cc0000 !important;
+    border-color: #cc0000 !important;
+}
+
+.left-arrow {
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 6px;
+    transform: rotate(135deg);
+}
+
+.down-arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 6px;
+    transform: rotate(45deg);
+}
+
+table tr td:last-child {
+    white-space: nowrap;
+    width: 1px;
+    text-align: right;
+    padding-right:1rem!important
+}
+
+.narrow-column {
+    white-space: nowrap;
+    width: 1px;
+    text-align: right;
+    padding-right:1rem !important
+}
+
+tr {
+    line-height: 40px;
+    min-height: 40px;
+    height: 40px;
+}
+
+.img-logo {
+    display: inline-block;
+    max-width: 220px;
+    vertical-align: bottom;
+}
+
+.btn-xl {
+    padding: 10px 20px;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+.checkbox-lg .form-check-input{
+    top: .8rem;
+    scale: 1.4;
+    margin-right: 0.7rem;
+}
+
+.checkbox-lg .form-check-label {
+    padding-top: 13px;
+}
+.rounded {
+    border-radius: 4rem !important;
+}
+
+.checkbox_div p
+{
+    margin:5px;
+    font-weight:bold;
+    font-size:17px;
+}
+.checkbox_div li
+{
+    margin:10px;
+    font-size:17px;
+    font-weight:bold;
+}
+
+.checkbox_div input[type="checkbox"]
+{
+    width:20px;
+    height:20px;
+}
+
+.mt-05 {
+  margin-top: 0.17rem !important;
+}
+
+.maxsize{
+    overflow-wrap: break-word;
+    max-width: 20vw !important;
+}
+
+.green-checkbox:checked{
+    background-color: #348032 !important;
+    border-color: dimgray !important;
+}
+
+.green-checkbox{
+    background-color: white !important;
+    border-color: dimgray !important;
+}

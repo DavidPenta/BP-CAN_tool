@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+
+{% block headline %}
+    {{ car.name }} >> {{ can_bus.name }}
+{% endblock headline %}
+
+{% block head %}
+    <script onload="init()">
+
+        function rotate(element) {
+            if (element.style.transform === "rotate(45deg)") {
+                element.style.transform = "rotate(225deg)";
+                element.style.verticalAlign = "bottom";
+
+            } else {
+                element.style.transform = "rotate(45deg)";
+                element.style.verticalAlign = "baseline";
+            }
+
+        }
+
+        function selectAll(source, message_id) {
+            let checkboxes = document.querySelectorAll('*[id^=rx_' + message_id + '_]');
+            c = source.checked;
+            for (let i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+
+            $.ajax({
+                    url: '{% url 'checkboxes' %}',
+                    type: "POST",
+                    data: {
+                        multiple_signal_id: message_id, checked: c, "csrfmiddlewaretoken": '{{ csrf_token }}'
+                    }
+                }
+            );
+        }
+
+        function showAndHide(source, o) {
+            let rows = $('[id^=' + o + ']');
+            for (let i in rows) {
+                if (typeof rows[i].style !== 'undefined') {
+                    if (rows[i].style.display === "none") {
+                        rows[i].style.display = "table-row";
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function checkIfAllChecked(o) {
+            let checkboxes = document.querySelectorAll('*[id^=rx_' + o + '_]')
+            for (let i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked === false) {
+                    document.querySelectorAll('*[id^=all_' + o + ']')
+                        .forEach(function (element) {
+                            element.checked = false;
+                        });
+                    return;
+                }
+            }
+
+            document.querySelectorAll('*[id^=all_' + o + ']')
+                .forEach(function (element) {
+                    element.checked = true;
+                });
+        }
+
+        function signal_checkbox(id) {
+            $.ajax({
+                    url: '{% url 'checkboxes' %}',
+                    type: "POST",
+                    data: {
+                        signal_id: id, "csrfmiddlewaretoken": '{{ csrf_token }}'
+                    }
+                }
+            );
+        }
+
+        function message_checkbox(id) {
+            $.ajax({
+                    url: '{% url 'checkboxes' %}',
+                    type: "POST",
+                    data: {
+                        message_id: id, "csrfmiddlewaretoken": '{{ csrf_token }}'
+                    }
+                }
+            );
+        }
+
+        $(document).ready(function init() {
+            let message_checkboxes = {{ message_checkboxes }};
+            let checkbox = undefined;
+            for (let i = 0; i < message_checkboxes.length; i++) {
+                checkbox = document.getElementById('tx_' + message_checkboxes[i]);
+                if (checkbox !== null) {
+                    checkbox.checked = true
+                }
+            }
+
+            let signals_checkboxes = {{ signals_checkboxes }};
+            for (let i = 0; i < signals_checkboxes.length; i++) {
+                document.querySelectorAll('*[id$=_' + signals_checkboxes[i] + ']')
+                    .forEach(function (element) {
+                        if (element !== null) {
+                            element.checked = true
+                        }
+                    });
+            }
+        });
+    </script>
+    <style>
+        .big-checkbox {
+            width: 22px;
+            height: 22px;
+            margin-top: 10px
+        }
+
+        .small-checkbox {
+            width: 18px;
+            height: 18px;
+            margin-top: 12px
+        }
+    </style>
+{% endblock head %}
+
+{% block content %}
+    <div id="content">
+        <div class="container align-middle pt-5 bg-white shadow-sm rounded pb-5 ps-5 pe-5">
+            <div class="text-xl-center text-lg-center text-center text-sm-center text-md-center mb-5">
+                <h3 class="align-content-center"> Správy:</h3>
+            </div>
+            <form id="form" method="post">
+                {% csrf_token %}
+                <div class="table-responsive">
+                    <table class="table table-fit table-white">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="width: 50px"></th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Názov</th>
+                            <th scope="col">Počet</th>
+                            <th scope="col">Tx_Unit</th>
+                            <th scope="col">Rx_Unit</th>
+                            <th scope="col" class="text-center" style="width: 50px">Tx</th>
+                            <th scope="col" class="text-center" style="width: 50px">Rx</th>
+                            <th scope="col" class="text-end" style="width: 75px"></th>
+
+                        </tr>
+                        </thead>
+                        {% for i, msg in table_messages %}
+                            <tr {% if msg.striped %} style="background-color: #F2F2F2" {% endif %}>
+                                <th scope="row">{{ i }}</th>
+                                <td><b>{{ msg.identifier }}</b></td>
+                                <td><b>{{ msg.name }}</b></td>
+                                <td></td>
+                                <td><b>{{ msg.transmitter }}</b></td>
+                                <td><b>{{ msg.receivers }}</b></td>
+                                <td class="text-center"><input class="form-check-input big-checkbox green-checkbox"
+                                                               type="checkbox" value="{{ msg.id }}"
+                                                               name="messages_checkbox"
+                                                               onClick="message_checkbox({{ msg.id }})"
+                                                               id="tx_{{ msg.id }}"></td>
+                                <td class="text-center"><input class="form-check-input big-checkbox green-checkbox"
+                                                               type="checkbox" value="{{ msg.id }}"
+                                                               id="all_{{ msg.id }}"
+                                                               onClick="selectAll(this, '{{ msg.id }}')"></td>
+                                <td class="text-end">
+                                    <button class="btn me-3" type="button"
+                                            onClick="showAndHide(this, 'tr_{{ msg.id }}_'); rotate(arrow_{{ msg.id }})">
+                                        <i id="arrow_{{ msg.id }}" class="down-arrow"
+                                           style="transform: rotate(45deg)"></i>
+                                    </button>
+                                </td>
+
+                                <script defer>
+                                    $(document).ready(function () {
+                                        window.onload = checkIfAllChecked('{{ msg.id }}');
+                                    });
+                                </script>
+
+
+                            </tr>
+
+                            {% for sig in msg.signals %}
+                                <tr id="tr_{{ msg.id }}_{{ sig.id }}"
+                                    style="display: none {% if sig.striped %} ;background-color: #F2F2F2 {% endif %}">
+                                    <th scope="row"></th>
+                                    <td></td>
+                                    <td>{{ sig.name }}</td>
+                                    <td>{{ sig.count }}</td>
+                                    <td></td>
+                                    <td>{{ sig.receivers }}</td>
+                                    <td></td>
+                                    <td class="text-center"><input
+                                            class="form-check-input small-checkbox green-checkbox" type="checkbox"
+                                            value="{{ sig.ids }}"
+                                            name="signals_checkbox" id="rx_{{ msg.id }}_{{ sig.id }}"
+                                            onClick="checkIfAllChecked('{{ msg.id }}'); signal_checkbox({{ sig.id }})"
+                                    ></td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+
+                        {% endfor %}
+                    </table>
+                </div>
+
+
+                <div class="d-flex justify-content-center">
+                    <ul class="list-unstyled">
+                        <li>
+                            <label for=STM32F1" class="h5"><input class="form-check-input me-2 green-checkbox"
+                                                                  type="radio"
+                                                                  id="STM32F1"
+                                                                  name="microcontroller" value=1 checked>STM32F1</label>
+                        </li>
+                        <li>
+                            <label for="STM32F4" class="h5"><input class="form-check-input me-2 green-checkbox"
+                                                                   type="radio"
+                                                                   id="STM32F4"
+                                                                   name="microcontroller" value=4>STM32F4</label>
+                        </li>
+                        <li>
+                            <label for="STM32F7" class="h5"><input class="form-check-input me-2 green-checkbox"
+                                                                   type="radio"
+                                                                   id="STM32F7"
+                                                                   name="microcontroller" value=7>STM32F7</label>
+                        </li>
+                    </ul>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+    <div class="container pt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-primary ms-auto me-auto d-block mb-5 btn-xl" id="back"
+                            onclick="location.href='{% url 'messages' car_id=car.id can_bus_id=can_bus.id %}';">
+                        <i class="left-arrow"></i> Späť
+                    </button>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <button form="form" type="submit" id="c_code"
+                            class="btn btn-primary ms-auto me-auto d-block mb-5 btn-xl">
+                        Vygenerovať C kód
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}

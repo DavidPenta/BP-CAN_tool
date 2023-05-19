@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block headline %}
+    Pridať signál do {{ car.name }} >> {{ can_bus.name }} >> {{ message.name }}
+{% endblock headline %}
+
+{% block content %}
+    <div class="container pt-5 bg-white shadow-sm rounded pb-5 ps-5 pe-5">
+        <form id="form" class="container" method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2" for="text1">Názov*</label>
+                    <div class="col-sm-10">{{ form.name }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2" for="text1">Start bit*</label>
+                    <div class="col-sm-10">{{ form.start_bit }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2" for="text3">Dĺžka*</label>
+                    <div class="col-sm-10">{{ form.length }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2">Byte order</label>
+                    <div class="col-sm-10">{{ form.is_little_endian }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2">Value type</label>
+                    <div class="col-sm-10">{{ form.is_signed }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2">Factor</label>
+                    <div class="col-sm-10">{{ form.factor }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2">Offset</label>
+                    <div class="col-sm-10">{{ form.offset }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2">Minimum</label>
+                    <div class="col-sm-10">{{ form.min }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2">Maximum</label>
+                    <div class="col-sm-10">{{ form.max }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2">Unit</label>
+                    <div class="col-sm-10">{{ form.unit }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2">Rx</label>
+                    <div class="col-sm-10">{{ form.receivers }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2">Multiplexer</label>
+                    <div class="col-sm-10">{{ form.is_multiplexer }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2">Multiplexer signal</label>
+                    <div class="col-sm-10">{{ form.multiplexer_signal }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2">Multiplexer value</label>
+                    <div class="col-sm-10">{{ form.multiplexer_value }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="row mt-4">
+                    <label class="col-form-label col-sm-2" for="text3">Poznámka</label>
+                    <div class="col-sm-10">{{ form.note }}</div>
+                </div>
+            </fieldset>
+        </form>
+        <p class="mt-4 d-flex flex-column">{{ form.errors }}</p>
+    </div>
+    <div class="container pt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-primary ms-auto me-auto d-block mb-5 btn-xl" id="back"
+                            onclick="location.href='{% url 'signals' car_id=car.id can_bus_id=can_bus.id message_id=message.id %}'">
+                        <i class="left-arrow "></i> Späť
+                    </button>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <button form="form" type="submit" class="btn btn-primary ms-auto me-auto d-block mb-5 btn-xl"
+                            id="save">Uložiť
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
